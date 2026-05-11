@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Quote & Affirmation Card Maker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>✨ Affirmation Cards</h1>
+      <p class="subtitle">Collect positive thoughts and remember the good things in life</p>
+    </div>
+
+    <!-- Form Section -->
+    <div class="form-section">
+      <h2>Add an Affirmation</h2>
+      <form id="affirmationForm">
+        <div class="form-group">
+          <label for="affirmationText">Your Affirmation or Quote *</label>
+          <textarea
+            id="affirmationText"
+            class="textarea-input"
+            placeholder="Write something positive and encouraging..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="affirmationAuthor">Author (optional)</label>
+            <input
+              type="text"
+              id="affirmationAuthor"
+              class="text-input"
+              placeholder="e.g., Me, Maya Angelou, etc."
+            >
+          </div>
+
+          <div class="form-group">
+            <label for="affirmationTag">Tag (optional)</label>
+            <input
+              type="text"
+              id="affirmationTag"
+              class="text-input"
+              placeholder="e.g., growth, self-care, motivation"
+            >
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Affirmation</button>
+      </form>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="actions-section">
+      <button id="viewAllBtn" class="btn btn-secondary">View All</button>
+      <button id="randomBtn" class="btn btn-secondary">Show Random</button>
+      <button id="clearAllBtn" class="btn btn-danger">Clear All</button>
+    </div>
+
+    <!-- Cards Display -->
+    <div class="cards-section">
+      <div id="cardsContainer" class="cards-container">
+        <div class="empty-state">
+          <p>No affirmations yet. Start by adding one to brighten your day! ✨</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>💛 Made to help you remember the good things in life</p>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="modalOverlay" class="modal-overlay hidden"></div>
+  <div id="confirmModal" class="modal hidden">
+    <h3>Clear All Affirmations?</h3>
+    <p>Are you sure you want to delete all your affirmations? This action cannot be undone.</p>
+    <div class="modal-buttons">
+      <button id="confirmBtn" class="btn btn-danger">Yes, Clear All</button>
+      <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

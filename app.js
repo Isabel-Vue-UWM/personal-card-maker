@@ -8,6 +8,45 @@ const STORAGE_KEY = 'affirmations_v1';
 // In-memory cache of affirmations
 let affirmations = [];
 
+// Fallback affirmations for when API fails
+const FALLBACK_AFFIRMATIONS = [
+  {
+    text: "You are worthy of love and respect.",
+    author: "You",
+    tag: "self-worth"
+  },
+  {
+    text: "Your potential is limitless.",
+    author: "You",
+    tag: "motivation"
+  },
+  {
+    text: "Every day brings new opportunities.",
+    author: "You",
+    tag: "growth"
+  },
+  {
+    text: "You are capable of amazing things.",
+    author: "You",
+    tag: "confidence"
+  },
+  {
+    text: "Your voice matters and your story is important.",
+    author: "You",
+    tag: "empowerment"
+  },
+  {
+    text: "Be kind to yourself; you're doing the best you can.",
+    author: "You",
+    tag: "self-care"
+  },
+  {
+    text: "You deserve happiness and success.",
+    author: "You",
+    tag: "affirmation"
+  }
+];
+
 // Initialize app on load
 document.addEventListener('DOMContentLoaded', () => {
   loadAffirmations();
@@ -113,7 +152,32 @@ function handleViewAll() {
   renderCards();
 }
 
-function handleShowRandom() {
+async function handleShowRandom() {
+  // First, try to fetch from an external quotes API
+  const apiQuote = await fetchRandomQuoteFromAPI();
+  
+  if (apiQuote) {
+    // Display the API quote in a single card
+    const container = document.getElementById('cardsContainer');
+    container.innerHTML = '';
+    const card = createCardElement(apiQuote);
+    container.appendChild(card);
+    return;
+  }
+
+  // Fallback 1: Show a local fallback affirmation
+  if (FALLBACK_AFFIRMATIONS.length > 0) {
+    const randomFallback = FALLBACK_AFFIRMATIONS[
+      Math.floor(Math.random() * FALLBACK_AFFIRMATIONS.length)
+    ];
+    const container = document.getElementById('cardsContainer');
+    container.innerHTML = '';
+    const card = createCardElement(randomFallback);
+    container.appendChild(card);
+    return;
+  }
+
+  // Fallback 2: Show from user's saved affirmations
   if (affirmations.length === 0) {
     alert('No affirmations yet. Add one to get started!');
     return;
@@ -122,12 +186,46 @@ function handleShowRandom() {
   const randomIndex = Math.floor(Math.random() * affirmations.length);
   const randomAffirmation = affirmations[randomIndex];
 
-  // Display in a modal or update a single card display
   const container = document.getElementById('cardsContainer');
   container.innerHTML = '';
 
   const card = createCardElement(randomAffirmation);
   container.appendChild(card);
+}
+
+// ===========================
+// API Integration
+// ===========================
+
+/**
+ * Fetch a random motivational quote from a public API.
+ * Uses the Quotable API which provides inspirational quotes.
+ * Returns null if the request fails.
+ */
+async function fetchRandomQuoteFromAPI() {
+  try {
+    // Use Quotable API with a filter for inspirational/motivational quotes
+    const response = await fetch(
+      'https://api.quotable.io/random?minLength=50&tags=inspirational,motivation,success,wisdom',
+      { timeout: 5000 }
+    );
+
+    if (!response.ok) {
+      throw new Error(`API responded with status ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Transform API response to match our affirmation structure
+    return {
+      text: data.content,
+      author: data.author || 'Unknown',
+      tag: 'inspirational'
+    };
+  } catch (error) {
+    console.warn('Failed to fetch quote from API:', error);
+    return null; // Let caller handle fallback
+  }
 }
 
 // ===========================
